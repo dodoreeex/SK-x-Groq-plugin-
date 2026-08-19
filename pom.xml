@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.mcserver</groupId>
+    <artifactId>groq-skript-addon</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <repositories>
+        <!-- Skript's own Maven repository (official, current) -->
+        <repository>
+            <id>skript-releases</id>
+            <name>Skript Repository</name>
+            <url>https://repo.skriptlang.org/releases</url>
+        </repository>
+        <!-- Sometimes needed alongside it to resolve Skript's own paper-api reference cleanly -->
+        <repository>
+            <id>destroystokyo-repo</id>
+            <url>https://repo.destroystokyo.com/repository/maven-public/</url>
+        </repository>
+        <!-- PaperMC's official repository -->
+        <repository>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- Skript 2.16.2 — compile-only, it's already on the server at runtime -->
+        <dependency>
+            <groupId>com.github.SkriptLang</groupId>
+            <artifactId>Skript</artifactId>
+            <version>2.16.2</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--
+          Paper API — compile-only, already on the server at runtime.
+          Minecraft/Paper switched to year-based versioning at 26.1 (see docs.papermc.io/paper/dev/project-setup).
+          This uses a version RANGE so Maven resolves it to whatever the latest published
+          26.1 build is at build time, since exact build numbers change often.
+          If this fails to resolve, replace it with an exact build string you find at
+          https://repo.papermc.io/service/rest/repository/browse/maven-public/io/papermc/paper/paper-api/
+          e.g. <version>26.1.build.42-stable</version>
+        -->
+        <dependency>
+            <groupId>io.papermc.paper</groupId>
+            <artifactId>paper-api</artifactId>
+            <version>[26.1.build,)</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--
+          Gson — NOT bundled into our jar (scope=provided). Every Paper/Purpur server already
+          ships Gson internally and it's safely usable by plugins without shading it yourself.
+        -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.11.0</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>GroqSkriptAddon</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>3.3.1</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

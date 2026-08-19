@@ -1,0 +1,22 @@
+# Example script for the Groq Skript addon.
+# Put a copy of this in plugins/Skript/scripts/ to try it out (rename freely).
+
+command /ask <text>:
+	trigger:
+		set {_id} to "%player%"
+		send groq prompt "%arg-1%" to {_id}
+		if groq error of {_id} is "":
+			send "&b[AI] &f%last groq response of {_id}%" to player
+		else:
+			send "&c[AI] Something went wrong: %groq error of {_id}%" to player
+
+command /askreset:
+	trigger:
+		clear groq history of "%player%"
+		send "&aYour AI conversation memory has been cleared." to player
+
+command /askpersona <text>:
+	trigger:
+		set groq system prompt of "%player%" to "%arg-1%"
+		clear groq history of "%player%"
+		send "&aAI persona updated for you." to player
